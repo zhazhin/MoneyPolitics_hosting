@@ -1,7 +1,43 @@
+# oTree Project for Kristian-Lopez Vargas/Louis Putterman
+Programmer: Marco Gutierrez
+
+
 # Money in Politics
 **Programmers:** Marco Gutierrez and John Elliott
 
 ## Instructions
+
+### Deploy With Docker
+
+To install and run this project, make sure you have Docker installed on your system.
+
+1. Clone this repository to your local machine:
+
+2. Navigate to the repository directory:
+
+    ```bash
+    cd MoneyPolitics
+    ```
+
+3. Build the Docker image using the provided Dockerfile:
+
+    ```bash
+    docker build -t money_politics .
+    ```
+
+4. Once the image has been successfully built, you can run a container based on this image:
+
+    ```bash
+    docker run -d -p 80:8000 money_politics
+    ```
+
+    This command will run the container in the background and expose port 80 on your local machine to port 8000 of the container.
+
+5. Access the application in your web browser by visiting `http://localhost:80`.
+
+### Deploy Without Docker
+
+The following instructions are for creating a project in oTree that will contain the application 'MoneyPolitics' found in this repository.
 
 1. Install otree: `pip3 install -U otree`
 1. Create a project: `otree startproject klo_lp_apps`. The name doesn't
