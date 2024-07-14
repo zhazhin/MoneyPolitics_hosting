@@ -4,17 +4,13 @@
 
 {% block title %}
   {% if subsession.round_number <= Constants.practice_rounds %}
-    {% autoescape off %}
-      {% blocktrans trimmed %}
-        Messaging Section - Practice Round:
-      {% endblocktrans %}
-    {% endautoescape %}
+    {% blocktrans trimmed %}
+      Messaging Section - Practice Round:
+    {% endblocktrans %}
   {% else %}
-    {% autoescape off %}
-      {% blocktrans trimmed %}
-        Messaging Section:
-      {% endblocktrans %}
-    {% endautoescape %}
+    {% blocktrans trimmed %}
+      Messaging Section:
+    {% endblocktrans %}
   {% endif %}
 {% endblock %}
 
@@ -145,6 +141,7 @@
               </script>
 
               {% if player.id_in_group == income_9 %}
+                {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
@@ -156,6 +153,7 @@
 
               {% elif player.id_in_group == income_15_1 %}
                 {% formfield player.income_9 %}
+                {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
@@ -167,6 +165,7 @@
               {% elif player.id_in_group == income_15_2 %}
                 {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
+                {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
@@ -178,6 +177,7 @@
                 {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
+                {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
@@ -189,6 +189,7 @@
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
+                {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
@@ -200,6 +201,7 @@
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
+                {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
@@ -211,6 +213,7 @@
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
+                {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
               
@@ -222,6 +225,7 @@
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
+                {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
               
               {% elif player.id_in_group == income_125 %}
@@ -233,6 +237,7 @@
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
+                {% formfield player.income_125 %}
 
               {% endif %}
            </div>

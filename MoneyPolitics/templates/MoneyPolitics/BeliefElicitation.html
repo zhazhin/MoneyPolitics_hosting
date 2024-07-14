@@ -4,17 +4,13 @@
 
 {% block title %}
     {% if subsession.round_number <= Constants.practice_rounds %}
-        {% autoescape off %}
-            {% blocktrans trimmed %}
-                What's your ranking? - Practice Round
-            {% endblocktrans %}
-        {% endautoescape %}
+        {% blocktrans trimmed %}
+            What's your ranking? - Practice Round
+        {% endblocktrans %}
     {% else %}
-        {% autoescape off %}
-            {% blocktrans trimmed %}
-                What's your ranking?
-            {% endblocktrans %}
-        {% endautoescape %}
+        {% blocktrans trimmed %}
+            What's your ranking?
+        {% endblocktrans %}
     {% endif %}
 {% endblock %}
 
