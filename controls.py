@@ -5,7 +5,7 @@ Control parameters for MoneyPolitics
 task_endowments = [125, 80, 40, 25, 25, 15, 15, 15, 9]
 player_ids = ["125", "80", "40", "25_2", "25_1", "15_3", "15_2", "15_1", "9"]
 
-# Because oTree doesn't let us work with the multiple checkbox multiple choiice widget, we are going to create a list
+# Because oTree doesn't let us work with the multiple checkbox multiple choice widget, we are going to create a list
 # of options with the income and if its the 1st, 2nd or 3rd person with the same income
 possible_message_receivers = [['1251', 'Income 125'], ['801', 'Income 80'], ['401', 'Income 40'],
                               ['252', 'Income 25 (Player 2)'], ['251', 'Income 25 (Player 1)'],

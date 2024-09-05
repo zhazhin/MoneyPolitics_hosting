@@ -1,4 +1,11 @@
-from os import environ
+from os.path import dirname, abspath
+import gettext as _
+
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+SITE_ROOT = dirname(DJANGO_ROOT)
+USE_I18N = True
+
+#  from os import environ
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
 # in SESSION_CONFIGS, except those that explicitly override it.
@@ -8,7 +15,7 @@ from os import environ
 SESSION_CONFIG_DEFAULTS = {
     'real_world_currency_per_point': 1.00,
     'participation_fee': 0.00,
-    'doc': "",
+    'doc': ""
 }
 
 SESSION_CONFIGS = [
@@ -24,7 +31,7 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages: 'none', 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': False, # if true, participants suggest a parameter alongside the msg 
+        'suggested_parameter': False, # if true, participants suggest a parameter alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
@@ -46,14 +53,14 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages, 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris, Diamonds, SumNDigit
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
     {
@@ -68,16 +75,16 @@ SESSION_CONFIGS = [
         'msg': float(0),
         # The number of messages, 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
-    },    
+    },
     {
         'name': 'MP_Prog_Free_Cost_x_Dual_MSG',
         'display_name': 'MoneyPolitics-Progressivity with Free Dual Messaging',
@@ -90,16 +97,16 @@ SESSION_CONFIGS = [
         'msg': float(0),
         # The number of messages, 'single' or 'double'
         'msg_type': 'double',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
-    },    
+    },
     {
         'name': 'MP_Prog_2point_Cost_x_Single_MSG',
         'display_name': 'MoneyPolitics-Progressivity with 2 Point Cost Single Messaging',
@@ -112,16 +119,16 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages, 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
-    },    
+    },
     {
         'name': 'MP_Prog_2point_Cost_x_Dual_MSG',
         'display_name': 'MoneyPolitics-Progressivity with 2 Point Cost Dual Messaging',
@@ -134,14 +141,14 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages, 'single' or 'double'
         'msg_type': 'double',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
     {
@@ -156,14 +163,14 @@ SESSION_CONFIGS = [
         'msg': float(0),
         # The number of messages, 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
     {
@@ -178,14 +185,14 @@ SESSION_CONFIGS = [
         'msg': float(0),
         # The number of messages, 'single' or 'double'
         'msg_type': 'double',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
     {
@@ -200,14 +207,14 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages, 'single' or 'double'
         'msg_type': 'single',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
     {
@@ -222,18 +229,17 @@ SESSION_CONFIGS = [
         'msg': float(2),
         # The number of messages, 'single' or 'double'
         'msg_type': 'double',
-        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg 
+        'suggested_parameter': True, # if true, participants suggest a tax alongside the msg
         "matching": 'fixed', # matching system for  particints (fixed: same as first round, random: random per round )
         'prob_of_luck': [0, 40], # probability of players endowment being assigned by luck. List that takes values from 0 to 100
         'payoffs_db': "payoffs.csv", # relative path to payoffs
         'effort_on_practice': True,
         'real_effort_task': "Diamonds", # Tetris or Diamonds
         'msg_order': 'low-high', #low-high, #high-low, #random
-        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg  
+        'exclusive_senders': [], # list with endowments of players who can message. Empty for letting everyone msg
         'reveal_votes': True, # reveal votes if true
     },
 ]
-
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
@@ -255,7 +261,7 @@ ROOMS = [
 
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
-ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+#ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 DEMO_PAGE_INTRO_HTML = """ """
 
@@ -263,3 +269,7 @@ SECRET_KEY = '^sj1@)7g$9!w19h=jyd0sdqof@uwo2f^_d-zy9ra!rg!rf!ku*'
 
 # if an app is included in SESSION_CONFIGS, you don't need to list it here
 INSTALLED_APPS = ['otree']
+
+LOCALE_PATHS = (
+    SITE_ROOT + '/locale',
+)

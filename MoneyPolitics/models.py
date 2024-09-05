@@ -6,6 +6,7 @@ from otree.api import Currency as c
 from django import forms
 from django.conf import settings
 
+
 import csv
 import settings
 import controls as ctrl
@@ -13,6 +14,7 @@ import pandas as pd
 import random
 import numpy, os
 import math
+import django.db
 
 
 author = 'Marco Gutierrez, Skyler Stewart, and John Elliott'
@@ -29,6 +31,7 @@ class Constants(BaseConstants):
 
     instructions_template = "MoneyPolitics/Instructions.html"
     instructions_button = "MoneyPolitics/Instructions_Button.html"
+    interactive_graph = "MoneyPolitics/Slider.html"
 
     #Ravens config:
     config = {
@@ -179,7 +182,7 @@ class Group(BaseGroup):
         
         # if self.session.config['real_effort_task'] == "Tetris":
         #     sorted_list = sorted(game_scores.values(), reverse=True)
-        # else: # the less is the diference between guess and actual number, the better
+        # else: # the less is the difference between guess and actual number, the better
         #     sorted_list = sorted(game_scores.values(), reverse=False)
 
         # Control sorted_list
@@ -397,12 +400,7 @@ class Group(BaseGroup):
 
 # Function that creates a field to send messages according to the income of other player
 def send_message_field(label):
-    return models.BooleanField(
-        # USar multiple checkbox
-        blank=True,
-        label=label,
-        widget=forms.CheckboxInput
-    )
+    return models.BooleanField(initial=False, blank=True, label=label)
 
 
 class Player(BasePlayer):
@@ -553,7 +551,7 @@ class Player(BasePlayer):
     ranking = models.IntegerField(min=1, max=9)
 
     # Shuffled == True if player's income will be shuffled, False if not
-    shuffled = models.BooleanField()
+    shuffled = models.BooleanField(initial=False)
 
     # Earnings after the shuffling
     base_earnings = models.CurrencyField(min=0)
@@ -579,7 +577,7 @@ class Player(BasePlayer):
     practice_tax_rate = models.FloatField(min=0, max=100, label="")
 
     # suggested policy parameter
-    suggested_tax_rate = models.IntegerField(min=0, max=100, label="") # suggested tax rate
+    suggested_tax_rate = models.IntegerField(initial=0, min=0, max=100, label="") # suggested tax rate
     suggested_progressivity = models.IntegerField(min=1, max=5, choices=Constants.progressivity_levels, label="") # suggested tax rate
 
     # Preferred Tax Policy Parameters
@@ -596,7 +594,7 @@ class Player(BasePlayer):
     tax_payment = models.CurrencyField(min=0)
 
     # Player's score for game played
-    game_score = models.FloatField()
+    game_score = models.FloatField(initial=0)
     diamond_guess = models.IntegerField(min=0, max=1000)
     diamond_actual = models.IntegerField()
 
@@ -820,6 +818,10 @@ class Player(BasePlayer):
 
         return messages_sent
 
+# Moving here functions from pages.py so that it runs on new otree
+
+
+
     # Game payoff (without belief elicitation payoff)
     game_payoff = models.CurrencyField(min=0)
 
@@ -827,7 +829,7 @@ class Player(BasePlayer):
     guessed_ranking = models.IntegerField(choices=[rank for rank in range(1,10)], widget=widgets.RadioSelect)
     guessed_ranking_payoff = models.CurrencyField(min=0)
 
-    guessed_system = models.StringField(choices=["performance", "luck"], widget=widgets.RadioSelect)
-    guessed_system_payoff = models.CurrencyField(min=0)
+    guessed_system = models.StringField(initial="performance", choices=["performance", "luck"], widget=widgets.RadioSelect)
+    guessed_system_payoff = models.CurrencyField(initial=0, min=0)
 
-    belief_elicitation_payoff = models.CurrencyField(min=0)
+    belief_elicitation_payoff = models.CurrencyField(initial=0, min=0)

@@ -9,6 +9,7 @@ from .models import parse_config_tasks
 
 from django.conf import settings
 
+
 def linear_payoff(endowment, slope, tax):
     """Linear payoff function for Money Politics
 
@@ -410,7 +411,6 @@ class RealEffortResults(Page):
         player = self.player
 
         effort_or_luck = ""
-
         if player.shuffled is True:
             effort_or_luck = "Luck"
         elif player.shuffled is False:
@@ -507,17 +507,91 @@ class ColumnSlider(Page):
         else:
             return False
     def vars_for_template(self):
+
         #Define COnstants
         unique_task_endowments = list(set(ctrl.task_endowments))
         unique_task_endowments.sort()
+        income_id_dict = {}
 
+        # new parameters
+        optimal_taxes = [1, 0.85, 0.7, 0.55, 0.4, 0]
+        income_max_tax = 40
+        # defining alternative tax rates 
+        alt_tax_rates = []
+        for i in range(0,105, 5):
+            alt_tax_rates.append(i/100)
+        xvals = [tax_rate*100 for tax_rate in alt_tax_rates]
+        xvals_dict = {}
+        index = 0 # index for calling the optimal tax rate
+        
+        for endowment in unique_task_endowments:
+            if endowment != max(unique_task_endowments):
+                xvals_dict[endowment] = [(x) for x in xvals if x <= optimal_taxes[index]*100]
+            else:
+                xvals_dict[endowment] = xvals
+            index += 1
+
+        income_15_counter = 1
+        income_25_counter = 1
+
+        players = self.group.get_players()  # list of players objects in group
+        for income in unique_task_endowments:  # looping accross incomes to get income ordered list
+            for p in players:  # looping accross player ids to capture income specific ids
+                if p.base_earnings == income:  # if player has current income, append id to ordered list
+
+                    # extracting the base earnings without zeros
+                    if p.base_earnings < 10:
+                        string_income = str(p.base_earnings)[:1]
+                    elif p.base_earnings < 100:
+                        string_income = str(p.base_earnings)[:2]
+                    else:
+                        string_income = str(p.base_earnings)[:3]
+
+                    if p.base_earnings == 15:
+                        income_id_dict[f"income_{string_income}_{income_15_counter}"] = p.id_in_group
+                        income_15_counter += 1  # updating each time a player of income 15 is found
+                    elif p.base_earnings == 25:
+                        income_id_dict[f"income_{string_income}_{income_25_counter}"] = p.id_in_group
+                        income_25_counter += 1  # updating each time a player of income 25 is found
+                    else:
+                        income_id_dict[f"income_{string_income}"] = p.id_in_group
+
+        intersections_high_function = {}
+       
+        # obtaining its intercept
+        b_highest = (max(unique_task_endowments)-income_max_tax)/(min(optimal_taxes)-max(optimal_taxes))
+        list_of_slopes = {}
+        # evaluating payoffs for all the endowments but the max
+        index = 0 # index for accessing the optimal tax rates
+        for endowment in unique_task_endowments:
+            if endowment != max(unique_task_endowments):
+                intersections_high_function[f"endowment_{endowment}"] = linear_payoff(max(unique_task_endowments), b_highest, 
+                                                                                    optimal_taxes[index])
+            else:
+                intersections_high_function[f"endowment_{endowment}"] = max(unique_task_endowments)
+            index += 1
+        index = 0 # index for accessing the optimal tax rates
+        for endowment in unique_task_endowments:
+            
+            if endowment != max(unique_task_endowments):
+                current_intersection = intersections_high_function[f"endowment_{endowment}"]
+                optimal_tax = optimal_taxes[index]
+                list_of_slopes[endowment] = (endowment - current_intersection)/(0 - optimal_tax)
+            
+            else:
+                list_of_slopes[endowment] = b_highest
+                
+            index += 1
 
         return {
                 'tax_system': self.session.config['tax_system'], 
                 "message_cost": self.session.config['msg'],
                 'msg_type': self.session.config['msg_type'],
                 'endowments': unique_task_endowments,
-                'payoffs': parse_config()
+                'payoffs': parse_config(),
+                'xvals_dict':xvals_dict,
+                'base_earnings':p.base_earnings,
+                'slopes': list_of_slopes,
                 }
 
 
@@ -537,50 +611,49 @@ class PreparingMessage(Page):
 
     def get_form_fields(self):
         message = ['message']
-        
+
         if self.session.config['msg_type'] == 'single':
             choices = self.player.message_receivers_choices()
-            
+
             if self.session.config['suggested_parameter'] == True:
-                tax_system = self.session.config['tax_system'] 
+                tax_system = self.session.config['tax_system']
                 return message + choices + [f'suggested_{tax_system}']
             else:
-                return message+choices            
-        
+                return message + choices
+
         elif self.session.config['msg_type'] == 'double':
             numb_of_receivers = len(self.player.message_receivers_choices())
-            
+
             # keeping only the first half of receivers for the first message field
-            choices = self.player.message_receivers_choices()[:int(numb_of_receivers/2)]
+            choices = self.player.message_receivers_choices()[:int(numb_of_receivers / 2)]
 
             # keeping the second half of receivers for the second message field
             message_d = [message[0] + "_d"]
-            choices_d = self.player.message_receivers_choices()[int(numb_of_receivers/2):]
-            
+            choices_d = self.player.message_receivers_choices()[int(numb_of_receivers / 2):]
+
             if self.session.config['suggested_parameter'] == True:
-                tax_system = self.session.config['tax_system'] 
-                return message+choices+message_d+choices_d+[f'suggested_{tax_system}'] 
+                tax_system = self.session.config['tax_system']
+                return message + choices + message_d + choices_d + [f'suggested_{tax_system}']
             else:
-                return message+choices+message_d+choices_d  
+                return message + choices + message_d + choices_d
 
         else:
             print(f"Error: invalid value for self.session.config['msg_type'] {self.session.config['msg_type']}")
 
-
     def vars_for_template(self):
-        income_id_dict = {} # dict with ids ordered by income (from lower to higher)
-        players = self.group.get_players() # list of players objects in group
-        unique_task_endowments = list(set(Constants.task_endowments)) # ordered from lower to higher
+        income_id_dict = {}  # dict with ids ordered by income (from lower to higher)
+        players = self.group.get_players()  # list of players objects in group
+        unique_task_endowments = list(set(Constants.task_endowments))  # ordered from lower to higher
         unique_task_endowments.sort()
         msg_cost_int = int(self.session.config['msg'])
 
-        income_15_counter = 1 
-        income_25_counter = 1 
+        income_15_counter = 1
+        income_25_counter = 1
 
-        for income in unique_task_endowments: # looping accross incomes to get income ordered list                       
-            for p in players: # looping accross player ids to capture income specific ids 
-                if p.base_earnings == income: # if player has current income, append id to ordered list
-                    
+        for income in unique_task_endowments:  # looping accross incomes to get income ordered list
+            for p in players:  # looping accross player ids to capture income specific ids
+                if p.base_earnings == income:  # if player has current income, append id to ordered list
+
                     # extracting the base earnings without zeros
                     if p.base_earnings < 10:
                         string_income = str(p.base_earnings)[:1]
@@ -591,40 +664,61 @@ class PreparingMessage(Page):
 
                     if p.base_earnings == 15:
                         income_id_dict[f"income_{string_income}_{income_15_counter}"] = p.id_in_group
-                        income_15_counter += 1 # updating each time a player of income 15 is found
+                        income_15_counter += 1  # updating each time a player of income 15 is found
                     elif p.base_earnings == 25:
                         income_id_dict[f"income_{string_income}_{income_25_counter}"] = p.id_in_group
-                        income_25_counter += 1 # updating each time a player of income 25 is found
+                        income_25_counter += 1  # updating each time a player of income 25 is found
                     else:
                         income_id_dict[f"income_{string_income}"] = p.id_in_group
 
-        # merging our dictionaries to create our variables
-        output = {'msg_cost_int': msg_cost_int, 'tax_system': self.session.config['tax_system'], "message_cost": self.session.config['msg'],
-                  'msg_type': self.session.config['msg_type'], **income_id_dict, 'suggested_parameter': self.session.config['suggested_parameter']}
+        # new parameters
+        optimal_taxes = [1, 0.85, 0.7, 0.55, 0.4, 0]
+        income_max_tax = 40
+        # defining alternative tax rates 
+        alt_tax_rates = []
+        for i in range(0,105, 5):
+            alt_tax_rates.append(i/100)
+        xvals = [tax_rate*100 for tax_rate in alt_tax_rates]
+        xvals_dict = {}
+        index = 0 # index for calling the optimal tax rate
+        for endowment in unique_task_endowments:
+            if endowment != max(unique_task_endowments):
+                xvals_dict[endowment] = [(x) for x in xvals if x <= optimal_taxes[index]*100]
+            else:
+                xvals_dict[endowment] = xvals
+            index += 1
         
+        # merging our dictionaries to create our variables
+        output = {'msg_cost_int': msg_cost_int, 'tax_system': self.session.config['tax_system'],
+                  "message_cost": self.session.config['msg'],
+                  'msg_type': self.session.config['msg_type'],
+                  'base_earnings': self.player.base_earnings,   **income_id_dict,
+                  'suggested_parameter': self.session.config['suggested_parameter'],
+                  'xvals_dict':xvals_dict,
+                  'payoffs': parse_config(),}
+
         print(output)
         return {**output}
-            
 
     def before_next_page(self):
-        
+
         player = self.player
-        #NOTE: To count the messages, we won't use elif, because sending a message to someone is not exclusive; 
+        # NOTE: To count the messages, we won't use elif, because sending a message to someone is not exclusive;
         # you can send them to multiple people and that's independent from sending to another one before
 
         messages_sent = self.player.calculate_messages_sent()
 
         # Calculating and discounting the total message cost
-        player.total_messaging_costs += messages_sent*self.session.config['msg']
+        player.total_messaging_costs += messages_sent * self.session.config['msg']
         player.after_message_earnings = player.base_earnings - player.total_messaging_costs
 
         # Storing the number of messages sent
         player.num_messages_sent = messages_sent
-    
+
     def error_message(self, values):
         player = self.player
 
-        choices = self.player.message_receivers_choices() # getting the receivers items 
+        choices = self.player.message_receivers_choices()  # getting the receivers items
 
         current_message_count = 0
 
@@ -634,32 +728,33 @@ class PreparingMessage(Page):
                 current_message_count += 1
         print("msgs", current_message_count)
 
-        total_messaging_costs = current_message_count*self.session.config['msg'] 
-        print("total_messaging_costs",total_messaging_costs)
+        total_messaging_costs = current_message_count * self.session.config['msg']
+        print("total_messaging_costs", total_messaging_costs)
         current_earnings = player.base_earnings - total_messaging_costs
-        print("current_earnings",current_earnings)
+        print("current_earnings", current_earnings)
 
-        if current_earnings < 0: # if player tries to spend more than what he has
+        if current_earnings < 0:  # if player tries to spend more than what he has
             # telling the player the correct answer
-            if settings.LANGUAGE_CODE=="en":
+            if settings.LANGUAGE_CODE == "en":
                 error_msg = f"You tried to send {current_message_count} message(s), spending {total_messaging_costs} points when you only have {player.base_earnings}. Decrease the number of messages you want to send"
-            elif settings.LANGUAGE_CODE=="es":
+            elif settings.LANGUAGE_CODE == "es":
                 error_msg = f"Trataste de enviar {current_message_count} mensaje(s), gastando {total_messaging_costs} puntos cuando solo tienes {player.base_earnings}. Disminuye el número de mensajes que quieres enviar"
             return error_msg
-        
+
         # Checking if "tax" or "because" in msg
         print("player_message: ", values["message"])
         print("message_count: ", current_message_count)
         print("tax and because not in message", "tax" not in values["message"] and "because" not in values["message"])
-        
+
         error_msg = "Only messages containing both words 'tax' and 'because' are admissible."
-        if current_message_count>0:
+        if current_message_count > 0:
             print("first step")
             if self.session.config["msg_type"] == "single":
                 if ("tax" not in values["message"] or "because" not in values["message"]):
                     return error_msg
             elif self.session.config["msg_type"] == "double":
-                if ("tax" not in values["message"] or "because" not in values["message"]) or ("tax" not in values["message_d"] or "because" not in values["message_d"]):
+                if ("tax" not in values["message"] or "because" not in values["message"]) or (
+                        "tax" not in values["message_d"] or "because" not in values["message_d"]):
                     return error_msg
             elif self.session.config["msg_type"] == "none":
                 pass
@@ -737,10 +832,11 @@ class ProcessingMessage(WaitPage):
             
             sender_identifier = ""
             player_income_str = None
+            LANGUAGE_CODE="en"
 
-            if settings.LANGUAGE_CODE=="en":
+            if LANGUAGE_CODE=="en":
                 player_income_str = "<b>From a citizen with a wealth of "
-            elif settings.LANGUAGE_CODE=="es":
+            elif LANGUAGE_CODE=="es":
                 player_income_str = "<b>De un ciudadano con una riqueza de "
 
             sender_identifier = player_income_str + string_income + " points" + "</b>: "
@@ -842,7 +938,7 @@ class ProcessingMessage(WaitPage):
 class ReceivingMessage(Page):
     def vars_for_template(self):
         return {'tax_system': self.session.config['tax_system'], "message_cost": self.session.config['msg'],
-                  'msg_type': self.session.config['msg_type']}
+                  'msg_type': self.session.config['msg_type'], 'total_messaging_costs': self.player.total_messaging_costs}
 
     def is_displayed(self):
         if self.session.config["msg_type"] == "none":
@@ -1113,6 +1209,7 @@ class ResultsWaitPage(WaitPage):
 
             player.belief_elicitation_payoff = player.guessed_ranking_payoff 
             player.payoff = player.game_payoff + player.belief_elicitation_payoff
+            print("player.payoff: ", player.payoff)
 
 
 class Results(Page):
@@ -1155,7 +1252,8 @@ class Results(Page):
                 tax_rates = "Undisclosed"
                 
             return {
-                    'player_tax_rate': str(int(self.player.tax_rate))+"%", 
+                    'player_tax_rate': str(int(self.player.tax_rate))+"%",
+                    'base_earnings': self.player.base_earnings,
                     'msg_cost_int': msg_cost_int, 
                     'tax_system': tax_system, 
                     'tax_rate': str(int(tax_rate*100))+"%",
@@ -1164,9 +1262,12 @@ class Results(Page):
                     "message_cost": self.session.config['msg'],
                     'msg_type': self.session.config['msg_type'],
                     'system_guess': self.player.guessed_system,
+                    'num_messages': self.player.num_messages_sent,
                     'system_actual': selected_systems,
                     'ranking_guess': self.player.guessed_ranking,
+                    'total_messaging_costs': self.player.total_messaging_costs,
                     'ranking_actual': self.player.ranking,
+                    'payoff': self.player.payoff,
                     'game_payoff': self.player.game_payoff,
                     'system_guess_payoff': self.player.guessed_system_payoff,
                     'ranking_guess_payoff': self.player.guessed_ranking_payoff,

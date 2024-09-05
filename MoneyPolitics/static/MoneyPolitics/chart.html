@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div style="display: flex; height: 50vh;">
+    <div id="container" style="width: 70%; height: 50vh;"></div>
+    <hr>
+    <div id="container_1" style="width: 20%; height: 50vh;"></div>
+</div>
+<div>
+    <label for="slider">Tax: <span id="val">0</span></label>
+    <input type="range" id="slider" min="0" max="100" step="1" value="0">
+</div>
+<script>
+    // obtener parametros a traves de la url
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const payoffs_url = params.get('payoffs');
+    console.log('param1:', payoffs_url + typeof payoffs_url);
+
+  </script>
+
+<script>
+    // Variables are lists
+    var labels_1 = [''];
+    var baseData_1 = [35];
+    var baseData_2 = [1000];
+    var currentData_1 = [35];
+    var endowments_1 = [0, 1, 2, 3, 4];
+    payoffs_1 = {}
+    for (let i = 0; i < 101; i++) {
+        let raArray = [];
+        for (let j = 0; j < 5; j++) {
+            let ra = Math.floor(Math.random() * 100) + 1; 
+            raArray.push(ra);
+        }
+        payoffs_1[i] = raArray;
+    }
+    var chart_1 = Highcharts.chart('container_1', {
+        chart: {
+            renderTo: 'container_1',
+            type: 'column'
+        },
+        title: {
+            text: 'Total'
+        },
+        xAxis: {
+            categories: labels_1,
+            title: {
+                text: ''
+            }
+        },
+        yAxis: {
+            tickInterval: 100,
+            max:1000,
+            title: {
+                text: ''
+            }
+        },
+        plotOptions: {
+            column: {
+                grouping: false
+            }
+        },
+        series: [
+            {
+                name: 'Max',
+                data: baseData_2,
+                borderColor: '#303030',
+                color: '#FFFFFF',
+                showInLegend: false, // No mostrar en la leyenda
+                enableMouseTracking: false, // Desactivar el seguimiento del mouse
+            },
+            {
+                name: 'Total',
+                data: currentData_1,
+                opacity: 0.7,
+                dataLabels: {
+                    enabled: false
+                }
+            },
+            
+        ]
+    });
+</script>
+
+<script>
+    var labels = ['9', '15', '15', '15', '25', '25', '40', '80', '125']; // Las etiquetas
+    var baseData = [9, 15, 15, 15, 25, 25, 40, 80, 125]; // Datos para crear los bordes de las barras
+    var currentData = [9, 15, 15, 15, 25, 25, 40, 80, 125]; // Creacion de las barras en otro color 
+    var endowments = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 
+    payoffs = {}
+    
+
+    
+    var payoffs = {
+        0: [9, 15, 15, 15, 25, 25, 40, 80, 125],
+        /*
+        1: [36, 56, 86, 46, 66],
+        2: [37, 57, 87, 47, 67],
+        3: [37, 57, 87, 47, 67],
+        4: [37, 57, 87, 47, 67],
+        */
+    };
+    
+    for (let i = 1; i < 101; i++) {
+        let raArray = [];
+        for (let j = 0; j < 9; j++) {
+            let ra = Math.floor(Math.random() * 100) + 1; 
+            raArray.push(ra);
+        }
+        payoffs[i] = raArray;
+    }
+
+    console.log(payoffs);
+
+    var chart = Highcharts.chart('container', {
+        chart: {
+            renderTo: 'container',
+            type: 'column'
+        },
+        title: {
+            text: 'Payoffs'
+        },
+        xAxis: {
+            categories: labels,
+            title: {
+                text: 'Endowment'
+            }
+        },
+        yAxis: {
+            tickInterval: 20,
+            title: {
+                text: 'Payoff'
+            }
+        },
+        plotOptions: {
+            column: {
+                grouping: false
+            }
+        },
+        series: [
+            {
+                name: 'Tax 0',
+                data: baseData,
+                borderColor: '#303030',
+                color: '#FFFFFF'
+            }, {
+                name: 'Current Tax',
+                data: currentData,
+                opacity: 0.7,
+                dataLabels: {
+                    enabled: false
+                }
+            },
+        ]
+    });
+    console.log(payoffs)
+    function updateLine(){
+        var the_value = parseInt(document.getElementById('slider').value);
+        var newData = [];
+
+        for(var i = 0; i < endowments.length; i++){
+            var endowment = endowments[i];
+            if (payoffs[the_value] !== undefined && payoffs[the_value][endowment] !== undefined) {
+                newData.push(Math.round(payoffs[the_value][endowment]));
+            } else {
+                console.error("Los datos de payoffs no están definidos correctamente", payoffs[the_value]);
+            }
+        }
+
+        chart.series[1].setData(newData);
+
+        var span = document.getElementById("val");
+        document.getElementById('slider').value = the_value;
+        span.textContent = the_value.toString();
+    }
+
+    $("#slider").on("input change", function() {
+        updateLine();
+    });
+    function updateTotal(){
+        var the_value = parseInt(document.getElementById('slider').value);
+        var total = [0];
+
+        for(var i = 0; i < endowments.length; i++){
+            var endowment = endowments[i];
+            if (payoffs[the_value] !== undefined && payoffs[the_value][endowment] !== undefined) {
+                total[0] = total[0] + payoffs[the_value][endowment];
+            } else {
+                console.error("Los datos de payoffs no están definidos correctamente", payoffs[the_value]);
+            }
+        }
+
+        chart_1.series[1].setData(total);
+
+        var span = document.getElementById("val");
+        document.getElementById('slider').value = the_value;
+        span.textContent = the_value.toString();
+    }
+
+    $("#slider").on("input change", function() {
+        updateLine();
+        updateTotal()
+    });
+</script>
+
+</body>
+</html>

@@ -4,25 +4,30 @@
 
 {% block title %}
   {% if subsession.round_number <= Constants.practice_rounds %}
-    {% autoescape off %}
-      {% blocktrans trimmed %}
-        Messaging Section - Practice Round:
-      {% endblocktrans %}
-    {% endautoescape %}
+    {% blocktrans trimmed %}
+      Messaging Section - Practice Round:
+    {% endblocktrans %}
   {% else %}
-    {% autoescape off %}
-      {% blocktrans trimmed %}
-        Messaging Section:
-      {% endblocktrans %}
-    {% endautoescape %}
+    {% blocktrans trimmed %}
+      Messaging Section:
+    {% endblocktrans %}
   {% endif %}
 {% endblock %}
 
 {% block content %}
 <html>
 <head>
+
+    
+
+
+
 </head>
 <body>
+
+</script>
+
+
 
     {% if tax_system == "tax_rate" %}
     
@@ -125,6 +130,7 @@
 
     {% if msg_type == "double" %} 
       <p>
+        {{ chat }}
         {% blocktrans trimmed %}
         Write the message you want to send:
         {% endblocktrans %}
@@ -145,6 +151,7 @@
               </script>
 
               {% if player.id_in_group == income_9 %}
+                {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
@@ -156,6 +163,7 @@
 
               {% elif player.id_in_group == income_15_1 %}
                 {% formfield player.income_9 %}
+                {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
@@ -167,6 +175,7 @@
               {% elif player.id_in_group == income_15_2 %}
                 {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
+                {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
@@ -178,6 +187,7 @@
                 {% formfield player.income_9 %}
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
+                {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
@@ -189,6 +199,7 @@
                 {% formfield player.income_15_1 %}
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
+                {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
@@ -200,6 +211,7 @@
                 {% formfield player.income_15_2 %}
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
+                {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
@@ -211,6 +223,7 @@
                 {% formfield player.income_15_3 %}
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
+                {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
               
@@ -222,6 +235,7 @@
                 {% formfield player.income_25_1 %}
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
+                {% formfield player.income_80 %}
                 {% formfield player.income_125 %}
               
               {% elif player.id_in_group == income_125 %}
@@ -233,6 +247,7 @@
                 {% formfield player.income_25_2 %}
                 {% formfield player.income_40 %}
                 {% formfield player.income_80 %}
+                {% formfield player.income_125 %}
 
               {% endif %}
            </div>
@@ -347,112 +362,48 @@
       </p>
     {% elif msg_type == "single" %}
       <p>
+        
         {% blocktrans trimmed %}
+
         Write the message you want to send: (<span id="char-count-single">0</span>/280 characters)
         {% endblocktrans %}
       </p>
         
-
       <p>
-        <div class="container" style="display: flex; height: 500px;">
-             <div style="width: 40%; background: white;">
-                Message #1
-                {% formfield player.message %}
-
-                {% if player.id_in_group == income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
-
-                {% elif player.id_in_group == income_15_1 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
-
-                {% elif player.id_in_group == income_15_2 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
-
-                {% elif player.id_in_group == income_15_3 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
-
-                {% elif player.id_in_group == income_25_1 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
-
-                {% elif player.id_in_group == income_25_2 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
+        <div class="container" style="display: flex; flex-direction: row; height: 50vh;">
+          <div style="flex: 1 1; ; padding: 20px; text-align: center; ">
+              {{ chat }}
+          </div>
+          <main style="flex: 1 1; ; padding: 20px; text-align: center; ">
+              
+              
+              <p>
                 
-                {% elif player.id_in_group == income_40 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_80 %}
-                  {% formfield player.income_125 %}
+                     <div style="width: 100%; background: white;">
+                        Your message: <br>
+                        (up to 280 characters)
+                        {% formfield player.message %}
+                        <p>Each message cost x points.</p>
+                        <div class="btn btn-secondary" id="buton-send-message"> Send</div>
+                        <script>
+                          charcount = document.getElementById('char-count')
+                          let messageInput = document.querySelector('[name=message]');
+                          messageInput.oninput = function() {
+                          charcount.innerText = messageInput.value.length;
+                          };
+                        </script>
+                        
+                    </div>
                 
-                {% elif player.id_in_group == income_80 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_125 %}
-                
-                {% elif player.id_in_group == income_125 %}
-                  {% formfield player.income_9 %}
-                  {% formfield player.income_15_1 %}
-                  {% formfield player.income_15_2 %}
-                  {% formfield player.income_15_3 %}
-                  {% formfield player.income_25_1 %}
-                  {% formfield player.income_25_2 %}
-                  {% formfield player.income_40 %}
-                  {% formfield player.income_80 %}
-
-                {% endif %}
-            </div>
+               </p>
+          </main>
+          <footer style="flex: 2 2; ; padding: 20px; text-align: center; ">
+            <iframe src="{% static 'MoneyPolitics/chart.html' %}?payoffs='{{payoffs}}'" width="100%" height="600px" frameborder="0"></iframe>
+          </footer>
         </div>
-       </p>
+      </p>
+
+      
 
     {% endif %}
 
@@ -480,4 +431,36 @@
     </p>
 </body>
 </html>
+
+
+<script>
+hideDefaultChatButtonAndChatInput()
+function hideDefaultChatButtonAndChatInput()
+{
+  var chatInputElement = document.getElementsByClassName('otree-chat__input')[0];
+  var chatInputSendButton = document.getElementsByClassName('otree-chat__btn-send')[0];
+  chatInputElement.style.display = 'none';
+  chatInputSendButton.style.display = 'none';
+}
+
+function sendMessageToChat()
+{
+  var chatInputElement = document.getElementsByClassName('otree-chat__input')[0];
+  var chatInputSendButton = document.getElementsByClassName('otree-chat__btn-send')[0];
+  var message_div = document.getElementById('id_message');
+  chatInputElement.value = message_div.value
+  chatInputSendButton.click();
+  message_div.value = '';
+}
+
+var sendButton = document.getElementById('buton-send-message');
+sendButton.addEventListener('click', function() {
+    sendMessageToChat();
+});
+</script>
+
+
 {% endblock %}
+
+
+
