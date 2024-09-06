@@ -602,7 +602,7 @@ class Player(BasePlayer):
     private_income = models.CurrencyField(min=0)
     public_income = models.CurrencyField(min=0)
 
-    def message_receivers_choices(self):
+    def message_receivers_choices_new(self):
         """
         Determines the list of possible message receivers in experiment.
         It can be a list with messaging

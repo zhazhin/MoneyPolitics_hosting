@@ -613,7 +613,7 @@ class PreparingMessage(Page):
         message = ['message']
 
         if self.session.config['msg_type'] == 'single':
-            choices = self.player.message_receivers_choices()
+            choices = self.player.message_receivers_choices_new()
 
             if self.session.config['suggested_parameter'] == True:
                 tax_system = self.session.config['tax_system']
@@ -622,14 +622,14 @@ class PreparingMessage(Page):
                 return message + choices
 
         elif self.session.config['msg_type'] == 'double':
-            numb_of_receivers = len(self.player.message_receivers_choices())
+            numb_of_receivers = len(self.player.message_receivers_choices_new())
 
             # keeping only the first half of receivers for the first message field
-            choices = self.player.message_receivers_choices()[:int(numb_of_receivers / 2)]
+            choices = self.player.message_receivers_choices_new()[:int(numb_of_receivers / 2)]
 
             # keeping the second half of receivers for the second message field
             message_d = [message[0] + "_d"]
-            choices_d = self.player.message_receivers_choices()[int(numb_of_receivers / 2):]
+            choices_d = self.player.message_receivers_choices_new()[int(numb_of_receivers / 2):]
 
             if self.session.config['suggested_parameter'] == True:
                 tax_system = self.session.config['tax_system']
@@ -718,7 +718,7 @@ class PreparingMessage(Page):
     def error_message(self, values):
         player = self.player
 
-        choices = self.player.message_receivers_choices()  # getting the receivers items
+        choices = self.player.message_receivers_choices_new()  # getting the receivers items
 
         current_message_count = 0
 
