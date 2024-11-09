@@ -1,0 +1,8 @@
+[build]
+  command = "docker build -t money_politics . && docker run -d -p 80:8000 money_politics"
+  publish = "."
+
+[[redirects]]
+from = "/*"
+to = "/"
+status = 200
