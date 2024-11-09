@@ -1,8 +1,0 @@
-[build]
-command = "echo 'Static files already generated'"
-publish = "dist"
-
-[[redirects]]
-from = "/*"
-to = "/"
-status = 200
