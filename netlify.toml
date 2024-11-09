@@ -1,5 +1,5 @@
 [build]
-  command = "docker build -t money_politics . && docker run -d -p 80:8000 money_politics"
+  command = "docker build -t money_politics ."
   publish = "."
 
 [[redirects]]
